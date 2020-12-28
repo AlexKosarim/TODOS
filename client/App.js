@@ -1,38 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, FlatList, View } from 'react-native';
-import { Navbar } from './src/Navbar';
-import { AddTodo } from './src/AddTodo';
-import { Todo } from './src/Todo';
+import { Navbar } from './src/components/Navbar';
+import { AddTodo } from './src/components/AddTodo';
+import { Todo } from './src/components/Todo';
+import { useHttp } from './src/hooks/http.hooks';
 import './config';
 
 export default function App() {
   const [todos, setTodos] = useState([]);
+  const { request } = useHttp();
 
-  const getTodos = () => {
-    try {
-      fetch(`${window.baseUrl}/api/todo`)
-        .then((res) => res.json())
-        .then((arr) => setTodos(arr))
-        .catch((e) => console.log(e));
-    } catch (error) {
-      (err) => console.log(err);
-    }
-  };
-  useEffect(() => getTodos(), []);
+  useEffect(() => {
+    const getTodos = async () => {
+      try {
+        const todos = await request(`${window.baseUrl}/api/todo`);
+        setTodos(todos);
+      } catch (error) {
+        (err) => console.log(err);
+      }
+    };
+    getTodos();
+  }, []);
 
-  const addTodo = (title = 'TODO') => {
+  const addTodo = async (title = 'TODO') => {
     try {
-      fetch(`${window.baseUrl}/api/todo/add`, {
-        method: 'POST',
-        body: JSON.stringify({ title }),
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((res) => res.json())
-        .then(({ todo }) => setTodos((prev) => [todo, ...prev]))
-        .catch((e) => console.log(e));
+      const { todo } = await request(`${window.baseUrl}/api/todo/add`, 'POST', {
+        title
+      });
+      if (todo) {
+        setTodos((prev) => [todo, ...prev]);
+      }
     } catch (error) {
       (err) => console.log(err);
     }
