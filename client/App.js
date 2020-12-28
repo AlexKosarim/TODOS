@@ -13,8 +13,6 @@ export default function App() {
       fetch(`${window.baseUrl}/api/todo`)
         .then((res) => res.json())
         .then((arr) => setTodos(arr))
-        // .then((res) => console.log(res))
-        // .then((json) => console.log(json))
         .catch((e) => console.log(e));
     } catch (error) {
       (err) => console.log(err);
@@ -23,16 +21,7 @@ export default function App() {
   useEffect(() => getTodos(), []);
 
   const addTodo = (title = 'TODO') => {
-    // setTodos((prev) => [
-    //   ...prev,
-    //   {
-    //     id: Date.now().toString(),
-    //     title
-    //   }
-    // ]);
-
     try {
-      console.log(1111);
       fetch(`${window.baseUrl}/api/todo/add`, {
         method: 'POST',
         body: JSON.stringify({ title }),
@@ -42,9 +31,7 @@ export default function App() {
         }
       })
         .then((res) => res.json())
-        .then((arr) => console.log(arr))
-        // .then((res) => console.log(res)),
-        // .then((json) => console.log(json))
+        .then(({ todo }) => setTodos((prev) => [todo, ...prev]))
         .catch((e) => console.log(e));
     } catch (error) {
       (err) => console.log(err);
@@ -52,7 +39,19 @@ export default function App() {
   };
 
   const removeTodo = (id) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    try {
+      fetch(`${window.baseUrl}/api/todo/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(() => setTodos((prev) => prev.filter((todo) => todo.id !== id)))
+        .catch((e) => console.log(e));
+    } catch (error) {
+      (err) => console.log(err);
+    }
   };
 
   return (
