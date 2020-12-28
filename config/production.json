@@ -1,0 +1,5 @@
+{
+  "port": "5005",
+  "hostname": "localhost",
+  "mongoUri": ""
+}
