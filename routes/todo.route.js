@@ -20,8 +20,9 @@ router.post("/add" /*, auth*/, async (req, res) => {
     const { title } = req.body;
     const todo = new Todo({ title });
 
-    await todo.save();
-    res.send(req.body);
+    await todo.save(); // .then((todo1) => (xxx = todo1));
+    // console.log(777);
+    res.json({});
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Something went wrong! Try again!" });
