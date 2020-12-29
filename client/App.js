@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, FlatList, View } from 'react-native';
-import { Navbar } from './src/components/Navbar';
-import { AddTodo } from './src/components/AddTodo';
-import { Todo } from './src/components/Todo';
+import { Navbar } from './src/components/Navbar/Navbar';
+import { AddTodo } from './src/components/Todo/AddTodo';
+import { Todo } from './src/components/Todo/Todo';
 import { useHttp } from './src/hooks/http.hooks';
 import './config';
 
