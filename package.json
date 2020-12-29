@@ -23,7 +23,11 @@
     "pino-colada": "^2.1.0"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.12.1",
+    "@react-navigation/native": "^5.8.10",
+    "@react-navigation/stack": "^5.12.8",
     "config": "^3.3.3",
-    "mongoose": "^5.11.8"
+    "mongoose": "^5.11.8",
+    "react-native-gesture-handler": "^1.9.0"
   }
 }

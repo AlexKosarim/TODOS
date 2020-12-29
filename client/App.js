@@ -1,78 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, FlatList, View } from 'react-native';
-import { Navbar } from './src/components/Navbar/Navbar';
-import { AddTodo } from './src/components/Todo/AddTodo';
-import { Todo } from './src/components/Todo/Todo';
-import { useHttp } from './src/hooks/http.hooks';
+// import { StyleSheet, FlatList, View } from 'react-native';
+// import { Navbar } from './src/components/Navbar/Navbar';
+// import { AddTodo } from './src/components/Todo/AddTodo';
+// import { Todo } from './src/components/Todo/Todo';
+// import { useHttp } from './src/hooks/http.hooks';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import TodosScreen from './src/pages/TodosScreen';
+import SignInScreen from './src/pages/SignInScreen';
+import { getStorageItem, removeStorageItem } from './src/utils/storage';
+
 import './config';
 
 export default function App() {
-  const [todos, setTodos] = useState([]);
-  const { request } = useHttp();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(false);
+  const [token, setToken] = useState(null);
+
+  const Stack = createStackNavigator();
 
   useEffect(() => {
-    const getTodos = async () => {
-      try {
-        const todos = await request(`${window.baseUrl}/api/todo`);
-        setTodos(todos);
-      } catch (error) {
-        (err) => console.log(err);
+    async function getValue() {
+      const storedToken = await getStorageItem('token');
+      console.log(storedToken);
+      if (storedToken != null) {
+        setToken(storedToken);
       }
-    };
-    getTodos();
+      // Use for token removing
+      // await removeStorageItem('token');
+    }
+
+    getValue();
   }, []);
 
-  const addTodo = async (title = 'TODO') => {
-    try {
-      const { todo } = await request(`${window.baseUrl}/api/todo/add`, 'POST', {
-        title
-      });
-      if (todo) {
-        setTodos((prev) => [todo, ...prev]);
-      }
-    } catch (error) {
-      (err) => console.log(err);
-    }
-  };
-
-  const removeTodo = (id) => {
-    try {
-      fetch(`${window.baseUrl}/api/todo/delete/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(() => setTodos((prev) => prev.filter((todo) => todo.id !== id)))
-        .catch((e) => console.log(e));
-    } catch (error) {
-      (err) => console.log(err);
-    }
-  };
+  if (isLoading) {
+    return 'Loading...';
+  }
 
   return (
-    <View>
-      <Navbar />
-      <View style={styles.container}>
-        <AddTodo onSubmit={addTodo} />
-        <View>
-          <FlatList
-            data={todos}
-            renderItem={({ item }) => (
-              <Todo todo={item} onRemove={removeTodo} />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        </View>
-      </View>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false
+        }}
+      >
+        {token == null ? (
+          <Stack.Screen name="Sign In" component={SignInScreen} />
+        ) : (
+          <>
+            <Stack.Screen name="Todos" component={TodosScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 30,
-    paddingVertical: 20
-  }
-});
