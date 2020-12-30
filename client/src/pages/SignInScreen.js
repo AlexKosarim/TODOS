@@ -1,18 +1,15 @@
 import React from 'react';
 import { Button, StyleSheet, TextInput, View } from 'react-native';
-// import { Navbar } from '../components/Navbar/Navbar';
-// import { useHttp } from '../hooks/http.hooks';
-import { setStorageItem } from '../utils/storage';
+import { AuthContext } from '../context/AuthContext';
 import '../../config';
-// import AsyncStorage from '@react-native-community/async-storage';
 
 export default function TodosPage() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  // const { signIn } = React.useContext(AuthContext);
+  const { login } = React.useContext(AuthContext);
 
-  const onSignUpHandler = async () => await setStorageItem('token', 'token1');
+  const onSignUpHandler = () => login('token2');
 
   return (
     <View style={styles.screen}>
@@ -59,12 +56,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1
   },
-  form: {
-    // borderStyle: 'solid',
-    // borderWidth: 2,
-    // borderColor: '#3959ab',
-    // padding: 10
-  },
+  form: {},
   block: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -73,12 +65,12 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: 20
   },
   button: {
-    margin: 30
+    margin: '10px'
   },
   input: {
     width: '100%',
