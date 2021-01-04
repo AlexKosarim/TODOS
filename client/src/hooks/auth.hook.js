@@ -14,6 +14,8 @@ export const useAuth = () => {
     setToken(jwtToken);
     // setUserId(id);
     await setStorageItem('token', jwtToken);
+    // await removeStorageItem('token');
+    setReady(true);
   }, []);
 
   const logout = useCallback(async () => {
@@ -28,8 +30,8 @@ export const useAuth = () => {
       const storedToken = await getStorageItem('token');
       if (storedToken != null) {
         login(storedToken /*, data.userId */);
-        setReady(true);
       }
+      setReady(true);
     };
     getValue();
     // logout();

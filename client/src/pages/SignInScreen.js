@@ -1,15 +1,65 @@
 import React from 'react';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useHttp } from '../hooks/http.hooks';
 import { AuthContext } from '../context/AuthContext';
 import '../../config';
 
 export default function TodosPage() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState(null);
+
+  const { request } = useHttp();
 
   const { login } = React.useContext(AuthContext);
 
-  const onSignUpHandler = () => login('token2');
+  const onChangePassword = (val) => {
+    setError(null);
+    setPassword(val);
+  };
+
+  const onChangeUsername = (val) => {
+    setError(null);
+    setUsername(val);
+  };
+
+  const onSignUpHandler = async () => {
+    setError(null);
+    try {
+      const form = {
+        username,
+        password
+      };
+      await request(`${window.baseUrl}/api/auth/signup`, 'POST', form)
+        .then(({ token, userId }) => login(token, userId))
+        .catch((err) => {
+          if (err && err.message) {
+            setError(err.message);
+          }
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  }; //login('token2');
+
+  const onSignInHandler = async () => {
+    setError(null);
+    try {
+      const form = {
+        username,
+        password
+      };
+      await request(`${window.baseUrl}/api/auth/signin`, 'POST', form)
+        .then(({ token, userId }) => login(token, userId))
+        .catch((err) => {
+          if (err && err.message) {
+            setError(err.message);
+          }
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View style={styles.screen}>
@@ -18,7 +68,8 @@ export default function TodosPage() {
           <TextInput
             placeholder="Username"
             value={username}
-            onChangeText={setUsername}
+            name="username"
+            onChangeText={onChangeUsername}
             style={styles.input}
           />
         </View>
@@ -26,11 +77,17 @@ export default function TodosPage() {
           <TextInput
             placeholder="Password"
             value={password}
-            onChangeText={setPassword}
+            name="password"
+            onChangeText={onChangePassword}
             secureTextEntry
             style={styles.input}
           />
         </View>
+        {error && (
+          <View style={styles.blockError}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
         <View style={styles.buttonsContainer}>
           <Button
             title="Sign up"
@@ -39,9 +96,8 @@ export default function TodosPage() {
           />
           <Button
             title="Sign in"
-            onPress={() => {}}
+            onPress={onSignInHandler}
             style={styles.button}
-            disabled
           />
         </View>
       </View>
@@ -62,6 +118,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 15
+  },
+  blockError: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+    marginTop: 15
+  },
+  errorText: {
+    color: 'red'
   },
   buttonsContainer: {
     flexDirection: 'row',

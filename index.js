@@ -9,7 +9,8 @@ app.use(express.json({ extended: true }));
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(pino);
 
-app.use("/api/todo", require("./routes/todo.route"));
+app.use("/api/todo", require("./routes/todo.routes"));
+app.use("/api/auth", require("./routes/auth.routes"));
 
 async function start() {
   try {
