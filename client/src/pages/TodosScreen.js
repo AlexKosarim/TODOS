@@ -4,16 +4,20 @@ import { Navbar } from '../components/Navbar/Navbar';
 import { AddTodo } from '../components/Todo/AddTodo';
 import { Todo } from '../components/Todo/Todo';
 import { useHttp } from '../hooks/http.hooks';
+import { AuthContext } from '../context/AuthContext';
 import '../../config';
 
 export default function TodosScreen() {
   const [todos, setTodos] = useState([]);
   const { request } = useHttp();
+  const { token, logout } = React.useContext(AuthContext);
 
   useEffect(() => {
     const getTodos = async () => {
       try {
-        const todos = await request(`${window.baseUrl}/api/todo`);
+        const todos = await request(`${window.baseUrl}/api/todo`, 'GET', null, {
+          Authorization: `Bearer ${token}`
+        }).catch((er) => console.log(er));
         setTodos(todos);
       } catch (error) {
         (err) => console.log(err);
@@ -24,9 +28,16 @@ export default function TodosScreen() {
 
   const addTodo = async (title = 'TODO') => {
     try {
-      const { todo } = await request(`${window.baseUrl}/api/todo/add`, 'POST', {
-        title
-      });
+      const { todo } = await request(
+        `${window.baseUrl}/api/todo/add`,
+        'POST',
+        {
+          title
+        },
+        {
+          Authorization: `Bearer ${token}`
+        }
+      );
       if (todo) {
         setTodos((prev) => [todo, ...prev]);
       }
@@ -37,7 +48,14 @@ export default function TodosScreen() {
 
   const removeTodo = async (id) => {
     try {
-      await request(`${window.baseUrl}/api/todo/delete/${id}`, 'DELETE');
+      await request(
+        `${window.baseUrl}/api/todo/delete/${id}`,
+        'DELETE',
+        {},
+        {
+          Authorization: `Bearer ${token}`
+        }
+      );
       setTodos((prev) => prev.filter((todo) => todo.id !== id));
     } catch (error) {
       console.log(error);

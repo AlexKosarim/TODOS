@@ -2,10 +2,10 @@ const { Router } = require("express");
 // const config = require("config");
 // const shortid = require("shortid");
 const Todo = require("../models/Todo");
-// const auth = require("../middleware/auth.middleware");
+const auth = require("../middleware/auth.middleware");
 const router = Router();
 
-router.get("/" /*, auth*/, async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const todos = await Todo.find({});
     res.json(todos.reverse());
@@ -14,7 +14,7 @@ router.get("/" /*, auth*/, async (req, res) => {
   }
 });
 
-router.post("/add" /*, auth*/, async (req, res) => {
+router.post("/add", auth, async (req, res) => {
   try {
     const { title } = req.body;
     const todo = new Todo({ title });
@@ -27,7 +27,7 @@ router.post("/add" /*, auth*/, async (req, res) => {
   }
 });
 
-router.delete("/delete/:id" /*, auth*/, async (req, res) => {
+router.delete("/delete/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
     await Todo.findByIdAndRemove({ _id: id });

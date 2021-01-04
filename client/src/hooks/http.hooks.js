@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 export const useHttp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { logout } = React.useContext(AuthContext);
+
   const request = useCallback(
     async (url, method = 'GET', body = null, headers = {}) => {
-      //console.log('response', 888);
       setLoading(true);
       try {
         if (body) {
@@ -24,10 +26,17 @@ export const useHttp = () => {
 
         setLoading(false);
 
+        if (data && data.message && data.message === 'Unauthorized') {
+          logout();
+        }
+
         return data;
       } catch (e) {
         setLoading(false);
         setError(e.message);
+        if (e && e.message && e.message === 'Unauthorized') {
+          logout();
+        }
         throw e;
       }
     },
