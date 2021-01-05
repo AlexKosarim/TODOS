@@ -40,7 +40,7 @@ app.use("/api/auth", require("./routes/auth.routes"));
 //   }
 // }
 
-start();
+// start();
 async function start() {
   try {
     await mongoose.connect(
