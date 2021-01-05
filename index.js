@@ -12,12 +12,12 @@ app.use(express.json({ extended: true }));
 app.use("/api/todo", require("./routes/todo.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
 
-const HOSTNAME = process.env.YOUR_HOST || "0.0.0.0"; // config.get("hostname") || "localhost";
-const PORT = process.env.PORT; // || config.get("port") || 3001;
+// const HOSTNAME = process.env.YOUR_HOST || "0.0.0.0"; // config.get("hostname") || "localhost";
+// const PORT = process.env.PORT; // || config.get("port") || 3001;
 
-app.listen(PORT, HOSTNAME, () => {
-  console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
-});
+// app.listen(PORT, HOSTNAME, () => {
+//   console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+// });
 
 // async function start() {
 //   try {
@@ -40,4 +40,26 @@ app.listen(PORT, HOSTNAME, () => {
 //   }
 // }
 
-// start();
+start();
+async function start() {
+  try {
+    await mongoose.connect(config.get("mongoUri"), {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+    });
+
+    const HOSTNAME = process.env.YOUR_HOST || "0.0.0.0"; // config.get("hostname") || "localhost";
+    const PORT = process.env.PORT; // || config.get("port") || 3001;
+
+    app.listen(PORT, HOSTNAME, () => {
+      console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+    });
+  } catch (error) {
+    console.log("Server error: " + error.message);
+    process.exit(1);
+  }
+}
+
+start();
