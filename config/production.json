@@ -1,5 +1,6 @@
 {
   "port": "5005",
   "hostname": "localhost",
-  "mongoUri": ""
+  "mongoUri": "mongodb+srv://mongo:111@cluster0.1glje.mongodb.net/todos?retryWrites=true&w=majority",
+  "jwtSecret": "some_secret"
 }
