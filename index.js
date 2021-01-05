@@ -12,7 +12,7 @@ app.use(express.json({ extended: true }));
 app.use("/api/todo", require("./routes/todo.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
 
-const HOSTNAME = config.get("hostname") || "localhost";
+const HOSTNAME = process.env.YOUR_HOST || "0.0.0.0"; // config.get("hostname") || "localhost";
 const PORT = process.env.PORT; // || config.get("port") || 3001;
 
 app.listen(PORT, HOSTNAME, () => {
