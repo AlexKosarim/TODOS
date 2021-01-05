@@ -5,7 +5,7 @@ const Todo = require("../models/Todo");
 const auth = require("../middleware/auth.middleware");
 const router = Router();
 
-router.get("/", auth, async (req, res) => {
+router.get("/" /*, auth*/, async (req, res) => {
   try {
     const todos = await Todo.find({});
     res.json(todos.reverse());
