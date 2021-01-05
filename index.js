@@ -53,12 +53,11 @@ async function start() {
       }
     );
 
-    // const HOSTNAME = process.env.YOUR_HOST || "0.0.0.0"; // config.get("hostname") || "localhost";
+    const HOSTNAME = process.env.HOST || "0.0.0.0"; // config.get("hostname") || "localhost";
     const PORT = process.env.PORT; // || config.get("port") || 3001;
 
-    app.listen(PORT /*, HOSTNAME*/, () => {
-      // console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
-      console.log(`Server running at port :${PORT}/`);
+    app.listen(PORT, HOSTNAME, () => {
+      console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
     });
   } catch (error) {
     console.log("Server error: " + error.message);
