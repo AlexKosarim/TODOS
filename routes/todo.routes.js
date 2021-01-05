@@ -5,6 +5,14 @@ const Todo = require("../models/Todo");
 const auth = require("../middleware/auth.middleware");
 const router = Router();
 
+router.get("/test" /*, auth*/, async (req, res) => {
+  try {
+    res.json({ test: "testValue" });
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong! Try again!" });
+  }
+});
+
 router.get("/" /*, auth*/, async (req, res) => {
   try {
     const todos = await Todo.find({});
