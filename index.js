@@ -43,14 +43,17 @@ app.use("/api/auth", require("./routes/auth.routes"));
 start();
 async function start() {
   try {
-    await mongoose.connect(config.get("mongoUri"), {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    });
+    await mongoose.connect(
+      "mongodb+srv://mongo:111@cluster0.1glje.mongodb.net/todos?retryWrites=true&w=majority" /*config.get("mongoUri")*/,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+      }
+    );
 
-    const HOSTNAME = process.env.YOUR_HOST || "0.0.0.0"; // config.get("hostname") || "localhost";
+    const HOSTNAME = process.env.YOUR_HOST; // || "0.0.0.0"; // config.get("hostname") || "localhost";
     const PORT = process.env.PORT; // || config.get("port") || 3001;
 
     app.listen(PORT, HOSTNAME, () => {
