@@ -13,7 +13,7 @@ app.use("/api/todo", require("./routes/todo.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
 
 const HOSTNAME = config.get("hostname") || "localhost";
-const PORT = config.get("port") || 3001;
+const PORT = process.env.PORT; // || config.get("port") || 3001;
 
 app.listen(PORT, HOSTNAME, () => {
   console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
